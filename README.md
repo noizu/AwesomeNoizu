@@ -1,17 +1,45 @@
-My Stuff
+Some of my Interesting Projects/Items
 =======
 
-
 # AI Related
-https://github.com/noizu-labs-ml/genai
-https://github.com/noizu-labs-ml/ex_llama
-https://github.com/noizu-labs-ml/NoizuPromptLingo
-https://github.com/noizu-labs-ml/elixir-openai
-https://github.com/noizu-labs-ml/artificial_intelligence
-https://github.com/noizu-labs-ml/elixir-weaviate
-https://github.com/noizu-labs-ml/noizu-ops
-https://github.com/noizu-labs/noizu-teams
-https://github.com/noizu-labs/intellect
+
+## Clients/Wrappers/Nifs
+### [GenAI Multi Model/Providier Client](https://github.com/noizu-labs-ml/genai)
+A Single Client capable of hooking into multipl local and remote models while handling api inconsistencies between models to allow replay of chat threads (including threads with tool calls/responses) against various models.
+
+Future work includes a (much anticipiated by myself) grid optimizer for for tuning and testing variations on prompts, models, hyper params against various message threads to assess which setup results in the 
+highest quality, or fastest or cheapest but good enough (skyline) inference. 
+
+### [ExLLama: llama.cpp nif extensions](https://github.com/noizu-labs-ml/ex_llama)
+LLama.cpp (via rust port and rustler) Nif extensions for loading and running inference against models directly from elixir. 
+
+### [OpenAI Client](https://github.com/noizu-labs-ml/elixir-openai)
+OpenAI Elixir Client. Far more robust (fine tuning, audio, etc.) then more general purpose GenAI one for working with OpenAI endpoints.
+
+### [Weaviate VDB Client](https://github.com/noizu-labs-ml/elixir-weaviate)
+Elixir extensions and macros for creating, and querying weaviate vdb records.
+
+## Prompting
+### [Noizu Prompting Conventions](https://github.com/noizu-labs-ml/NoizuPromptLingo)
+
+## Notes/Ideas
+
+### [AI Observations/Notes](https://github.com/noizu-labs-ml/artificial_intelligence)
+Some ancient (in the scheme of things) thoughts on building composable ai systems, and draft of reserach project for extending existing models by injecting a fine tuning layer and input section/output feedback section.
+
+### [Roko Coin](https://github.com/noizu-labs-ml/roko-coin)
+A tongue in cheek proposal for blockchain founded emergent intelligence.
+
+## Tools/Apps
+### [NoizuOPS: Command Line GPT](https://github.com/noizu-labs-ml/noizu-ops)
+
+## Multi Agent Project
+The following are older iterations of a currently closed source project I am working on for composing multiple model/multi-agent/multi-channel virtual work groups.
+NoizuTeams has good documentation and the intellect repo has greater implementation/proof of concept code. 
+
+### [NoizuTeams](https://github.com/noizu-labs/noizu-teams)
+
+### [Noizu Intellect](https://github.com/noizu-labs/intellect)
 
 # Cache Management
 
@@ -26,12 +54,16 @@ Java port of my PHP Frag Key library.
 # Scaffolding 
 
 ## Elixir
-https://github.com/noizu-labs/RuleEngine
-https://github.com/noizu-labs/ElixirCore
+### [RuleEngine](https://github.com/noizu-labs/RuleEngine)
 
 ### Newest
+[Entities](https://github.com/noizu-labs-scaffolding/entities)
+[Services](https://github.com/noizu-labs-scaffolding/services)
+[Core](https://github.com/noizu-labs-scaffolding/core)
 
 ### Legacy
+#### [ElixirCore](https://github.com/noizu-labs/ElixirCore)
+
 #### [Advanced Elixir Scaffolding](https://github.com/noizu-labs/advanced_elixir_scaffolding)
 - Provides Domain Objects and Repos, supporting multiple persistence layers per module with fallback support. (e.g. check redis first, if not populated hit db, if not populated hit api).
 - Annotation driven/extended json formatting of objects. Specify what fields to include/omit for different json output formats.
