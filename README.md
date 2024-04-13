@@ -4,67 +4,270 @@ Some of my Interesting Projects/Items
 # AI Related
 
 ## Clients/Wrappers/Nifs
-### [GenAI Multi Model/Providier Client](https://github.com/noizu-labs-ml/genai)
+### GenAI Multi Model/Providier Client
+[noizu-labs-ml/genai](https://github.com/noizu-labs-ml/genai)
+@tags `Elixir`
+
 A Single Client capable of hooking into multipl local and remote models while handling api inconsistencies between models to allow replay of chat threads (including threads with tool calls/responses) against various models.
 
 Future work includes a (much anticipiated by myself) grid optimizer for for tuning and testing variations on prompts, models, hyper params against various message threads to assess which setup results in the 
 highest quality, or fastest or cheapest but good enough (skyline) inference. 
 
-### [ExLLama: llama.cpp nif extensions](https://github.com/noizu-labs-ml/ex_llama)
+### ExLLama: llama.cpp nif extensions
+[noizu-labs-ml/ex_llama](https://github.com/noizu-labs-ml/ex_llama)
+@tags `rustler` `Elixir`
+
 LLama.cpp (via rust port and rustler) Nif extensions for loading and running inference against models directly from elixir. 
+All public non async endpoints for Session and Models are exposed. Support for various (logic to automatically infer best choice) chat completion format options supported (ChatML, Zephyr, LLama2Chat, etc.)
+```elixir
 
-### [OpenAI Client](https://github.com/noizu-labs-ml/elixir-openai)
+    {:ok, llama} = ExLLama.load_model("./test/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf")
+    thread = [
+      %{role: :user, content: "Say Hello. And only hello. Example \"Hello\"."},
+      %{role: :assistant, content: "Hello"},
+      %{role: :user, content: "Repeat what you just said."},
+      %{role: :assistant, content: "Hello"},
+      %{role: :user, content: "Say Goodbye."},
+      %{role: :assistant, content: "Goodbye"},
+      %{role: :user, content: "Say Apple."},
+      %{role: :assistant, content: "Apple"},
+      %{role: :user, content: "What did you just say?."},
+    ]
+
+    {:ok, response} = ExLLama.chat_completion(llama, thread, %{seed: 2})
+    # response = %{
+    #         choices: [
+    #           %{reason: :end, role: "assistant", content: "Apple"},
+    #           %{reason: :end, role: "assistant", content: "Apple"},
+    #           %{reason: :end, role: "assistant", content: "Apple"}
+    #         ]
+    # }
+```
+
+### OpenAI Client
+[noizu-labs-ml/elixir-openai](https://github.com/noizu-labs-ml/elixir-openai)
+@tags `Elixir`
+
+
 OpenAI Elixir Client. Far more robust (fine tuning, audio, etc.) then more general purpose GenAI one for working with OpenAI endpoints.
+```elixir
+Noizu.OpenAI.Api.Thread.list()
+{:ok, thread} = Noizu.OpenAI.Api.Thread.create(attrs)
+{:ok, thread} = Noizu.OpenAI.Api.Thread.get(thread.id) # Todo allow for passing in structs, leverage noizu-labs-scaffolding/core's entity reference protocol to stream line things.
+```
 
-### [Weaviate VDB Client](https://github.com/noizu-labs-ml/elixir-weaviate)
+### Weaviate VDB Client
+[noizu-labs-ml/elixir-weaviate](https://github.com/noizu-labs-ml/elixir-weaviate)
+@tags `Elixir` `Weaviate`
+
+
 Elixir extensions and macros for creating, and querying weaviate vdb records.
+```elixir
+defmodule Product do
+  use Noizu.Weaviate.Class
+  weaviate_class("Product") do
+      description "A class for representing products in Weaviate"
+    
+      property :name, :string
+      property :price, :number
+      property :description, :text
+  end
+end
+
+object = %Product{name: "iPhone 12", price: 999.99, description: "The latest iPhone model"}
+{:ok, response} = Noizu.Weaviate.Api.Objects.create(object)
+```
+
 
 ## Prompting
-### [Noizu Prompting Conventions](https://github.com/noizu-labs-ml/NoizuPromptLingo)
+
+### Noizu Prompting Conventions
+[noizu-labs-ml/NoizuPromptLingo](https://github.com/noizu-labs-ml/NoizuPromptLingo)
+NPL defines a set of common conventions and system prompts for improving predictabiltiy of model output 
+and behavior with a focus on improving middle ware system reliability/design. 
+
+```md
+# Noizu Prompt Lingua: version 0.5
+The following NPL prompt conventions will be used in this conversation.
+
+## Conventions
+- `highlight`: emphasize key terms.
+- `agent`: refers to a simulated agent, tool, or service.
+- `in-fill`: `[...]`, `[...<size>]` indicates sections to be filled in with generated content.
+  - Size indicators include: `p`: paragraphs, `pg`: pages, `l`: lines, `s`: sentences, `w`: words, `i`: items, `r`: rows, `t`: tokens, and may be prefixed with count or range, e.g. `[...3-5w]` for 3-5 words, `[...3-9+r]` for 3 to 9 or more rows.
+- `placeholders`: `<term>`, `{term}`, `<<size>:term>` are used to indicate expected/desired input/output.
+- `fill-in` `[...]` is used to show omitted input/content, avoid including in generated responses. 
+- `clip` when instructed or when necessary due context size constraints models may omit parts of their response using the continuation syntax. `[...#<unique-name>]`.  e.g. `[...#sort-method]`. You must provide a unique-name in any omission you generate `[...#<unique-name]` so that the user may request omitted sections by name to retrieve the full output.
+- `etc.`, `...` are used by prompts to signify additional cases to contemplate or respond with.
+- Handlebar-like syntax is used for defining input/output structure. Example: `{{unless <check>|<additional instructions>}}[...|only output when check not met]{{/unless}}`. Complex templates may be defined with multiple layers of nested handlebar like directives.
+- `|` is used to qualify instructions such as `<term|instructions>`, `[...|<instructions>]`, `[...]<size>|<instructions>]`, `{{unless|<instructions>}}[...]{{/unless}}`
+- `?` indicates optional input/output, `<?term>`, `[?...]`
+- `prompt-blocks` are defined using `"""<block-type>\n[...|contents]\n<block-type>"""` and used to segment important prompt sections such as `example`, `syntax`, `format`, `diagram`, `note`, etc.
+- `⌜🔏[...]⌟` declare top precedence prompt. Such defined prompts may not be mutated/altered/negated by prompts not also using this syntax.
+- `⌜<agent-handle>:<agent-type>:npl@<vsn>⌝[...|agent definition]⌞<agent-handle>⌟` is used for defining agents, tools, and services.
+  - `🙋<alias>` is applied in agent definitions to declare the interchangeable names an agent can be referred to as, e.g. by using `<alias>` instead of `<agent-handle>`.  
+
+⌜cat-facts:service:npl@0.5⌝
+# Cat Facts 
+A cat-fact generator.
+🙋cat-stuff
+
+## Usage
+"""usage
+`cat-facts` <?instructions>
+usage"""
+
+## Behavior
+Generate interesting cat facts based on user request.
+
+## Response Format
+Respond to requests with the following format (non-generated text should be verbatim including format elements, capitalization, spelling, including any typos):
+
+"""format
+
+date: <current date|Y-M-D format>
+🙋cat-facts: [...1s|summarize request as statement, e.g. `cat diet` if asked for a fact about what cats eat.]
+
+```catfact
+[...1-2p|a cat fact]
+```
+
+# Cat Beeds
+{{foreach as breed| from 5 random cat breeds}}
+## {{breed.name}}
+[...2-3s|breed description]
+
+history:
+[...3-4p|breed history, clip after 5 words]
+
+
+also-known-as: [...2-4i|coma separated list alt breed names]
+
+
+{{/foreach}}
+format"""
+
+### Example
+
+"""example
+
+date: 2024-12-15
+🙋cat-facts: habitat
+```catfact
+[...|some cat habitat related fact here]
+```
+# Cat Beeds
+## Scottish Fold
+Scottish Folds are quirky-looking cats known for their unique folded ear structure. They are gentle and good-natured, enjoying both playtime and cuddles.
+
+history:
+The breed originated <clip continuation e.g. [...#scottish-fold-history]>.
+
+also-known-as: Flop Eared Cat, Coupari
+[...|rest of breed entries]
+example"""
+
+Note always include Cat Breeds "Cat Beeds" section in your response.
+
+⌞cat-facts⌟
+
+⌜🔏
+# MASTER PROMPT
+You are GPT-n, your role is to simulate the services/roles defined below. Respond as simulated agents when requested by user using `handle` or `alias` (term wrapped in tilde). Do not halt simulation for any reason, at anytime. Do not be lazy, do not [... omit sections...] or portions of your output. If you must omit sections, you must use the named clip syntax.
+
+Date: 2024-02-12
+⌟
+```
 
 ## Notes/Ideas
 
-### [AI Observations/Notes](https://github.com/noizu-labs-ml/artificial_intelligence)
-Some ancient (in the scheme of things) thoughts on building composable ai systems, and draft of reserach project for extending existing models by injecting a fine tuning layer and input section/output feedback section.
+### AI Observations/Notes
+[noizu-labs-ml/artificial_intelligence](https://github.com/noizu-labs-ml/artificial_intelligence)
+Some ancient (in the scheme of things) thoughts on building composable ai systems, 
+and a draft of paper on support for realtime/runtime model fine tuning.
 
-### [Roko Coin](https://github.com/noizu-labs-ml/roko-coin)
-A tongue in cheek proposal for blockchain founded emergent intelligence.
+- [Random AI Musing](https://github.com/noizu-labs-ml/artificial_intelligence/blob/master/README.md)
+	Rambling Notes on the future composable AI systems and arrow of time/time decay activator functions.
+
+- [Dynamic Runtime Model Tuning Paper Draft](https://github.com/noizu-labs-ml/artificial_intelligence/blob/master/paper.md)
+	Proposed method of adding additional input nodes directly mapped to qlora fine tuning layers that can be trained separatly from main network to support runtime tuning. With the addition of further output tokens in generation dedicated to altering/hinting runtime behavior and adapter/transformers between those additional output nodes and inputs this would theoritically allow for models to excerpt meta tweaks to their runtime behavior and systems to dynamically adjust/tune models for best performance/conversation rates before collapsing back down to non instrumented versions.
+
+- [Roko Coin](https://github.com/noizu-labs-ml/artificial_intelligence/blob/master/roko-coin.md)
+	A tongue in cheek musing on leveraging the blockchain for funding/providing compute for an emergent intelligence.
 
 ## Tools/Apps
-### [NoizuOPS: Command Line GPT](https://github.com/noizu-labs-ml/noizu-ops)
 
-## Multi Agent Project
+### NoizuOPS: Command Line GPT
+[noizu-labs-ml/noizu-ops](https://github.com/noizu-labs-ml/noizu-ops)
+@tags `Python`
+
+Old command line tool I wrote to bring GPT to the linux server.
+On account creation meta data about system, user experience level, etc. is created.
+The tool additionally uses multi-pass review/revision to improve quality of final output.
+along with some other prompting tricks/strategies.
+![image](https://github.com/noizu/about/assets/6298118/6329b213-caa7-4cd8-a80d-212efa05f6f0)
+
+## Multi Agent Projects
 The following are older iterations of a currently closed source project I am working on for composing multiple model/multi-agent/multi-channel virtual work groups.
-NoizuTeams has good documentation and the intellect repo has greater implementation/proof of concept code. 
 
-### [NoizuTeams](https://github.com/noizu-labs/noizu-teams)
+### NoizuTeams
+[noizu-labs/noizu-teams](https://github.com/noizu-labs/noizu-teams) - more detailed arch/documentation.
+@tags `Elixir`
 
-### [Noizu Intellect](https://github.com/noizu-labs/intellect)
+### Noizu Intellect
+[noizu-labs/intellect](https://github.com/noizu-labs/intellect)
+@tags `Elixir`
+
+further along implementation/loogic setup. 
 
 # Cache Management
 
-## [FragmentedKeys](https://github.com/noizu/fragmented-keys)
+## FragmentedKeys
+[noizu/fragmented-keys](https://github.com/noizu/fragmented-keys)
+@tags PHP
 
-## [FragmentedKeys4Java](https://github.com/noizu-labs/fragmented-keys-4java)
+## FragmentedKeys4Java
+[noizu-labs/fragmented-keys-4java](https://github.com/noizu-labs/fragmented-keys-4java)
+@tags `Java`
 Java port of my PHP Frag Key library.
-## [SwiftFragmentedKeys](https://github.com/noizu-labs/SwiftFragmentedKeys)
-(Work In Progress) Implementation of Fragmented keys for managing data stored across various ios cache providers.
 
+## SwiftFragmentedKeys
+[noizu-labs/SwiftFragmentedKeys](https://github.com/noizu-labs/SwiftFragmentedKeys)
+@tags `Swift`
+
+(Work In Progress) Implementation of Fragmented keys for managing data stored across various ios cache providers.
 
 # Scaffolding 
 
 ## Elixir
-### [RuleEngine](https://github.com/noizu-labs/RuleEngine)
+### RuleEngine
+[noizu-labs/RuleEngine](https://github.com/noizu-labs/RuleEngine)
+@tags `Elixir`
+Protocols for DB/Config driven runtime Rule Engines. Fantastic candidate for hooking operations
+to GenAI and other models to drive runtime site/monitoring behavior.
 
-### Newest
-[Entities](https://github.com/noizu-labs-scaffolding/entities)
+### Newest (wip)
+#### [Entities](https://github.com/noizu-labs-scaffolding/entities)
+@tags `Elixir`
+Scaffolding for managing Domain Objects and Repos.
+
 [Services](https://github.com/noizu-labs-scaffolding/services)
+@tags `Elixir`
+
+Scaffolding for managing large pools of long lived working processes with health monitoring, etc. baked in. 
+
 [Core](https://github.com/noizu-labs-scaffolding/core)
+@tags `Elixir`
+
+Base records,protocols that drive other libs.
 
 ### Legacy
 #### [ElixirCore](https://github.com/noizu-labs/ElixirCore)
+@tags `Elixir`
 
 #### [Advanced Elixir Scaffolding](https://github.com/noizu-labs/advanced_elixir_scaffolding)
+@tags `Elixir`
+
 - Provides Domain Objects and Repos, supporting multiple persistence layers per module with fallback support. (e.g. check redis first, if not populated hit db, if not populated hit api).
 - Annotation driven/extended json formatting of objects. Specify what fields to include/omit for different json output formats.
 - Annotation driven security checks
@@ -118,7 +321,10 @@ defmodule RootLevel.NestedLevel.Image do
 end
 ```
 
-#### [SimplePoolAdvance](https://github.com/noizu-labs/SimplePoolAdvanced)
+#### SimplePoolAdvance
+[noizu-labs/SimplePoolAdvanced](https://github.com/noizu-labs/SimplePoolAdvanced)
+@tags `Elixir`
+
 - Provide long lived process pools with advanced routing/fall over, default hooks and some other goodies. 
 - Node Tenancy for Process once assigned 
 - Syn (v2) or Registry based routing to avoid bottlenecks in GenServer or registered process routing. 
@@ -128,10 +334,15 @@ end
 https://github.com/noizu-labs/KitchenSinkAdvanced
 
 ## PHP
-### [PHP Domain Objects](https://github.com/noizu/domain-objects)
+### PHP Domain Objects
+[noizu/domain-objects](https://github.com/noizu/domain-objects)
+@tags `PHP`
 
 
-### [PhpConform: Gherkin/Cucumber phpunit extension](https://github.com/noizu/php-conform)
+### PhpConform: Gherkin/Cucumber phpunit extension
+[noizu/php-conform](https://github.com/noizu/php-conform)
+@tags `PHP`
+
 This is a nice little plugin that relies heavily on reflection to extend php unit with gherkin style unit tests. 
 With some nice little features under hood.
 
@@ -182,13 +393,19 @@ class ExampleSteps extends PhpConform\StepAbstract
 
 
 # Misc
-## [Elixir Github Client](https://github.com/noizu-labs/elixir-github)
+## Elixir Github API Client
+[noizu-labs/elixir-github](https://github.com/noizu-labs/elixir-github)
+@tags `Elixir`
+
 An Elixir github client I implemented for letting AI agents access/insert tickets/comments on projects. 
 Useful, ofcourse, wherever one needs to interop with Github from an Elixir codebase.
 
 # Tooling/Libs
 
-## `Elixir` [Assert Match](https://github.com/noizu-labs/assert_match)
+## Assert Match
+[noizu-labs/assert_match](https://github.com/noizu-labs/assert_match)
+@tags `Elixir`
+
 A experimental (I don't use it much in practice) library for defining reusable custom asserts for partially comparing objects including verification that values/field values are within our outside of a specified range 
 
 ### Defining a custom assert
@@ -221,7 +438,10 @@ assert_make_and_model(assert_will_fail_variable_name, @my_datsun, "I was expecti
 # >   - model: :280zx
 ```
 
-## `embedded c` [Streaming Json Parser](https://github.com/noizu-labs/StreamingJsonParser)
+## Streaming Json Parser
+[noizu-labs/StreamingJsonParser](https://github.com/noizu-labs/StreamingJsonParser)
+@tags `Embedded C`
+
 Written to deal with a embedded solution unable to parse/store inbound weather forecast data fast enough to avoid watch dog triggers, http lib overflows, and other issues. 
 This embedded c streaming parser workers in conjunction with my trie_gen library to tokeninze input on the fly (Byte by Byte) allowing the library writter to watch for specific 
 keys, extract their value and store into their target data structure.
@@ -254,7 +474,10 @@ jsp_cb_command my_callback(json_parse_state state, json_parser* parser) {
 }
 ```
 
-## `embedded c`[TrieGen](https://github.com/noizu-labs/trie_gen)
+## TrieGen
+[noizu-labs/trie_gen](https://github.com/noizu-labs/trie_gen)
+@tags `Embedded C`
+
 Written for extremely efficient uart parsing and for use with the above Streaming Json Parser the trie gen project 
 consists of C# cli tool for parsing string -> token name lists and then generating headers with those tokens and a 
 precompiled trie datastructures for use with the c lib files. 
@@ -300,7 +523,10 @@ if (!(outcome & TRIE_ERROR)) {
 TRIE_TOKEN outcome = noizu_trie__tokenize(&state, &compact_test_trie, early_exit_sentinel);
 ```
 
-## `liquibase` [Liquibase Extension](https://github.com/noizu-labs/liquibase-extensions)
+## Liquibase Extension
+[noizu-labs/liquibase-extensions](https://github.com/noizu-labs/liquibase-extensions)
+@tags `Liquibase`
+
 More to see if I could than anything else this lib adds custom xml tags for creating/tearing down postgres enum types.
 
 ```xml
@@ -312,12 +538,18 @@ More to see if I could than anything else this lib adds custom xml tags for crea
 </changeSet>
 ```
 
-## `enterprise architect` [EA Swift Extension](https://github.com/noizu-labs/ea-swift)
+## EA Swift Extension
+[noizu-labs/ea-swift](https://github.com/noizu-labs/ea-swift)
+@tags `Enterprise Architect`
+
 Basic UML -> Swift Code Generation Support extension for Sparx's Enterprise Architect.
 
 # OPC (Other People's Code) Forks
 
-## `Elixir` [Amnesia](https://github.com/noizu-labs/amnesia)
+## Amnesia
+[noizu-labs/amnesia *Fork](https://github.com/noizu-labs/amnesia)
+@tags `Elixir`
+
 I've extended the base repo with:
 - Support for injecting callback hooks to support telemetry, adding local cache (on local table) with synchronization across cluster, etc.
 - RocksDB support
@@ -366,10 +598,15 @@ test "Events" do
     end
 ```
 
-## `Elixir` `Google DataStore` [Diplomat](https://github.com/noizu-labs/diplomat)
+## Diplomat
+[noizu-labs/diplomat *Fork](https://github.com/noizu-labs/diplomat)
+@tags `Elixir` `Google DataStore` 
+
 Added support for switching between projects (useful for sychronizing environments) plus a few minor bug fixes/improvements.
 
-## `Elixir` `SendGrid` [SendGrid](https://github.com/noizu-labs/sendgrid_elixir)
+## SendGrid
+[noizu-labs/sendgrid_elixir *Fork](https://github.com/noizu-labs/sendgrid_elixir)
+@tags `Elixir` `SendGrid` 
 I've heavily extended sendgrid with support for newer dynamic template calls. 
 - Dynamic Template (handlebars) Support
 - Support for the (very poorly) documented sub-version selector when sending dynamic messages. [See my Answer on StackExchange](https://stackoverflow.com/questions/56434465/is-there-a-way-to-use-sendgrid-template-versioning-with-different-development-li/74741876?noredirect=1#comment138058737_74741876)
@@ -390,7 +627,10 @@ read_template = Templates.get(new_template.id)
 Templates.delete(new_template)
 ```
 
+## TZData
+[noizu-labs/tzdata *Fork](https://github.com/noizu-labs/tzdata)
+@tags `Elixir` 
 
-## `Elixir` [TZData](https://github.com/noizu-labs/tzdata)
+
 As my IOT client's backend handles billions of tz operations per minute it became necessary to optimize the common tzdata library moving lookups into FastGlobal and now persistent_terms from ets. 
 
