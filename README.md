@@ -4,51 +4,51 @@ Some of my Interesting Projects/Items
 
 ## Table of Contents
 - [AI Related](#ai-related)
- - [Clients/Wrappers/Nifs](#clientswrappersnifs) - `Elixir`, `Rustler`
-   - [GenAI Multi Model/Providier Client](#genai-multi-modelprovidier-client)
-   - [ExLLama: llama.cpp nif extensions](#exllama-llamacpp-nif-extensions)
-   - [OpenAI Client](#openai-client)
-   - [Weaviate VDB Client](#weaviate-vdb-client)
- - [Prompting](#prompting)
-   - [Noizu Prompting Conventions](#noizu-prompting-conventions)
- - [Notes/Ideas](#notesideas)
-   - [AI Observations/Notes](#ai-observationsnotes)
- - [Tools/Apps](#toolsapps)
-   - [NoizuOPS: Command Line GPT](#noizuops-command-line-gpt) - `Python`
- - [Multi Agent Projects](#multi-agent-projects) - `Elixir`
-   - [NoizuTeams](#noizuteams)
-   - [Noizu Intellect](#noizu-intellect)
+  - [Clients/Wrappers/Nifs](#clients-wrappers-nifs) - `Elixir`, `Rustler`
+    - [GenAI](#genai-multi-model-provider-client) - Multi Model/Provider Interface for running inference against various models. `Elixir`, `AI`
+    - [ExLLama](#exllama-llama-cpp-nif-extensions) - Extensions for llama.cpp via Rust and Rustler. `Rustler`, `Elixir`
+    - [OpenAI Client](#openai-client) - Robust client for interacting with OpenAI's API. `Elixir`
+    - [Weaviate VDB Client](#weaviate-vdb-client) - Elixir macros for Weaviate vector DB operations. `Elixir`, `Weaviate`
+  - [Prompting](#prompting)
+    - [Noizu Prompting Conventions](#noizu-prompting-conventions) - Standards for consistent model output and system reliability. `Elixir`
+  - [Notes/Ideas](#notes-ideas)
+    - [AI Observations/Notes](#ai-observations-notes) - Insights on AI system composition and dynamic model tuning. `Elixir`
+  - [Tools/Apps](#tools-apps)
+    - [NoizuOPS: Command Line GPT](#noizuops-command-line-gpt) - GPT interface for Linux command line. `Python`
+  - [Multi Agent Projects](#multi-agent-projects) - `Elixir`
+    - [NoizuTeams](#noizuteams) - Framework for multi-agent virtual workgroups. `Elixir`
+    - [Noizu Intellect](#noizu-intellect) - Advanced implementation of multi-agent systems. `Elixir`
 - [Cache Management](#cache-management)
- - [FragmentedKeys](#fragmentedkeys) - `PHP`
- - [FragmentedKeys4Java](#fragmentedkeys4java) - `Java`
- - [SwiftFragmentedKeys](#swiftfragmentedkeys) - `Swift`
+  - [FragmentedKeys](#fragmentedkeys) - PHP library for fragmented key management. `PHP`
+  - [FragmentedKeys4Java](#fragmentedkeys4java) - Java port of FragmentedKeys. `Java`
+  - [SwiftFragmentedKeys](#swiftfragmentedkeys) - Swift implementation for iOS caching. `Swift`
 - [Scaffolding](#scaffolding)
- - [Elixir](#elixir)
-   - [RuleEngine](#ruleengine)
-   - [Newest (wip)](#newest-wip)
-     - [Entities](#entities)
-     - [Services](#services)
-     - [Core](#core)
-   - [Legacy](#legacy)
-     - [ElixirCore](#elixircore)
-     - [Advanced Elixir Scaffolding](#advanced-elixir-scaffolding)
-     - [SimplePoolAdvance](#simplepooladvance)
- - [PHP](#php)
-   - [PHP Domain Objects](#php-domain-objects)
-   - [PhpConform: Gherkin/Cucumber phpunit extension](#phpconform-gherkincucumber-phpunit-extension)
+  - [Elixir](#elixir)
+    - [RuleEngine](#ruleengine) - DB/Config driven runtime rule engines. `Elixir`
+    - [Newest (wip)](#newest-wip)
+      - [Entities](#entities) - Scaffolding for domain objects and repositories. `Elixir`
+      - [Services](#services) - Service management with health monitoring. `Elixir`
+      - [Core](#core) - Core protocols for other libraries. `Elixir`
+    - [Legacy](#legacy)
+      - [ElixirCore](#elixircore) - Core functionality for Elixir applications. `Elixir`
+      - [Advanced Elixir Scaffolding](#advanced-elixir-scaffolding) - Advanced scaffolding for diverse persistence layers. `Elixir`
+      - [SimplePoolAdvance](#simplepooladvance) - Advanced process pool management. `Elixir`
+  - [PHP](#php)
+    - [PHP Domain Objects](#php-domain-objects) - Domain-driven design objects for PHP. `PHP`
+    - [PhpConform: Gherkin/Cucumber phpunit extension](#phpconform-gherkin-cucumber-phpunit-extension) - Gherkin/Cucumber extension for PHP unit testing. `PHP`
 - [Misc](#misc)
- - [Elixir Github API Client](#elixir-github-api-client) - `Elixir`
-- [Tooling/Libs](#toolinglibs)
- - [Assert Match](#assert-match) - `Elixir`
- - [Streaming Json Parser](#streaming-json-parser) - `Embedded C`
- - [TrieGen](#triegen) - `Embedded C`
- - [Liquibase Extension](#liquibase-extension) - `Liquibase`
- - [EA Swift Extension](#ea-swift-extension) - `Enterprise Architect`
+  - [Elixir Github API Client](#elixir-github-api-client) - Client for interacting with GitHub via Elixir. `Elixir`
+- [Tooling/Libs](#tooling-libs)
+  - [Assert Match](#assert-match) - Library for custom assertions in Elixir. `Elixir`
+  - [Streaming Json Parser](#streaming-json-parser) - Parser for large JSON files in embedded C. `Embedded C`
+  - [TrieGen](#triegen) - Efficient parsing tool for embedded C applications. `Embedded C`
+  - [Liquibase Extension](#liquibase-extension) - Extensions for managing database changes with Liquibase. `Liquibase`
+  - [EA Swift Extension](#ea-swift-extension) - UML to Swift code generation for Enterprise Architect. `Enterprise Architect`
 - [OPC (Other People's Code) Forks](#opc-other-peoples-code-forks) - `Elixir`
- - [Amnesia](#amnesia)
- - [Diplomat](#diplomat)
- - [SendGrid](#sendgrid)
- - [TZData](#tzdata)
+  - [Amnesia](#amnesia) - Enhanced fork of Amnesia database library. `Elixir`
+  - [Diplomat](#diplomat) - Fork of Diplomat with added project switching capabilities. `Elixir`, `Google DataStore`
+  - [SendGrid](#sendgrid) - Fork with extended features for SendGrid. `Elixir`, `SendGrid`
+  - [TZData](#tzdata) - Optimized timezone data handling for high-load environments. `Elixir`
 
 -------------------------
 # AI Related
