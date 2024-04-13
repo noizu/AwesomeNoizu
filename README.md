@@ -1,6 +1,56 @@
 Some of my Interesting Projects/Items
 =======
 
+
+## Table of Contents
+- [AI Related](#ai-related)
+ - [Clients/Wrappers/Nifs](#clientswrappersnifs) - `Elixir`, `Rustler`
+   - [GenAI Multi Model/Providier Client](#genai-multi-modelprovidier-client)
+   - [ExLLama: llama.cpp nif extensions](#exllama-llamacpp-nif-extensions)
+   - [OpenAI Client](#openai-client)
+   - [Weaviate VDB Client](#weaviate-vdb-client)
+ - [Prompting](#prompting)
+   - [Noizu Prompting Conventions](#noizu-prompting-conventions)
+ - [Notes/Ideas](#notesideas)
+   - [AI Observations/Notes](#ai-observationsnotes)
+ - [Tools/Apps](#toolsapps)
+   - [NoizuOPS: Command Line GPT](#noizuops-command-line-gpt) - `Python`
+ - [Multi Agent Projects](#multi-agent-projects) - `Elixir`
+   - [NoizuTeams](#noizuteams)
+   - [Noizu Intellect](#noizu-intellect)
+- [Cache Management](#cache-management)
+ - [FragmentedKeys](#fragmentedkeys) - `PHP`
+ - [FragmentedKeys4Java](#fragmentedkeys4java) - `Java`
+ - [SwiftFragmentedKeys](#swiftfragmentedkeys) - `Swift`
+- [Scaffolding](#scaffolding)
+ - [Elixir](#elixir)
+   - [RuleEngine](#ruleengine)
+   - [Newest (wip)](#newest-wip)
+     - [Entities](#entities)
+     - [Services](#services)
+     - [Core](#core)
+   - [Legacy](#legacy)
+     - [ElixirCore](#elixircore)
+     - [Advanced Elixir Scaffolding](#advanced-elixir-scaffolding)
+     - [SimplePoolAdvance](#simplepooladvance)
+ - [PHP](#php)
+   - [PHP Domain Objects](#php-domain-objects)
+   - [PhpConform: Gherkin/Cucumber phpunit extension](#phpconform-gherkincucumber-phpunit-extension)
+- [Misc](#misc)
+ - [Elixir Github API Client](#elixir-github-api-client) - `Elixir`
+- [Tooling/Libs](#toolinglibs)
+ - [Assert Match](#assert-match) - `Elixir`
+ - [Streaming Json Parser](#streaming-json-parser) - `Embedded C`
+ - [TrieGen](#triegen) - `Embedded C`
+ - [Liquibase Extension](#liquibase-extension) - `Liquibase`
+ - [EA Swift Extension](#ea-swift-extension) - `Enterprise Architect`
+- [OPC (Other People's Code) Forks](#opc-other-peoples-code-forks) - `Elixir`
+ - [Amnesia](#amnesia)
+ - [Diplomat](#diplomat)
+ - [SendGrid](#sendgrid)
+ - [TZData](#tzdata)
+
+-------------------------
 # AI Related
 
 ## Clients/Wrappers/Nifs
