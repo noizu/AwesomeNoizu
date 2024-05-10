@@ -4,16 +4,16 @@ Some of my Interesting Projects/Items
 
 ## Table of Contents
 - [AI Related](#ai-related)
-  - [Clients/Wrappers/Nifs](#clients-wrappers-nifs) - `Elixir`, `Rustler`
-    - [GenAI](#genai-multi-model-provider-client) - Multi Model/Provider Interface for running inference against various models. `Elixir`, `AI`
-    - [ExLLama](#exllama-llama-cpp-nif-extensions) - Extensions for llama.cpp via Rust and Rustler. `Rustler`, `Elixir`
+  - [Clients/Wrappers/Nifs](#clientswrappersnifs) - `Elixir`, `Rustler`
+    - [GenAI](#genai-multi-modelprovidier-client) - Multi Model/Provider Interface for running inference against various models. `Elixir`, `AI`
+    - [ExLLama](#exllama-llamacpp-nif-extensions) - Extensions for llama.cpp via Rust and Rustler. `Rustler`, `Elixir`
     - [OpenAI Client](#openai-client) - Robust client for interacting with OpenAI's API. `Elixir`
     - [Weaviate VDB Client](#weaviate-vdb-client) - Elixir macros for Weaviate vector DB operations. `Elixir`, `Weaviate`
   - [Prompting](#prompting)
     - [Noizu Prompting Conventions](#noizu-prompting-conventions) - Standards for consistent model output and system reliability. `Elixir`
-  - [Notes/Ideas](#notes-ideas)
-    - [AI Observations/Notes](#ai-observations-notes) - Insights on AI system composition and dynamic model tuning. `Elixir`
-  - [Tools/Apps](#tools-apps)
+  - [Notes/Ideas](#notesideas)
+    - [AI Observations/Notes](#ai-observationsnotes) - Insights on AI system composition and dynamic model tuning. `Elixir`
+  - [Tools/Apps](#toolsapps)
     - [NoizuOPS: Command Line GPT](#noizuops-command-line-gpt) - GPT interface for Linux command line. `Python`
   - [Multi Agent Projects](#multi-agent-projects) - `Elixir`
     - [NoizuTeams](#noizuteams) - Framework for multi-agent virtual workgroups. `Elixir`
@@ -24,7 +24,7 @@ Some of my Interesting Projects/Items
   - [SwiftFragmentedKeys](#swiftfragmentedkeys) - Swift implementation for iOS caching. `Swift`
 - [Scaffolding](#scaffolding)
   - [Elixir](#elixir)
-    - [RuleEngine](#ruleengine) - DB/Config driven runtime rule engines. `Elixir`
+    - [RuleEngine](#rule-engine) - DB/Config driven runtime rule engines. `Elixir`
     - [Newest (wip)](#newest-wip)
       - [Entities](#entities) - Scaffolding for domain objects and repositories. `Elixir`
       - [Services](#services) - Service management with health monitoring. `Elixir`
@@ -35,10 +35,10 @@ Some of my Interesting Projects/Items
       - [SimplePoolAdvance](#simplepooladvance) - Advanced process pool management. `Elixir`
   - [PHP](#php)
     - [PHP Domain Objects](#php-domain-objects) - Domain-driven design objects for PHP. `PHP`
-    - [PhpConform: Gherkin/Cucumber phpunit extension](#phpconform-gherkin-cucumber-phpunit-extension) - Gherkin/Cucumber extension for PHP unit testing. `PHP`
+    - [PhpConform: Gherkin/Cucumber phpunit extension](#phpconform-gherkincucumber-phpunit-extension) - Gherkin/Cucumber extension for PHP unit testing. `PHP`
 - [Misc](#misc)
   - [Elixir Github API Client](#elixir-github-api-client) - Client for interacting with GitHub via Elixir. `Elixir`
-- [Tooling/Libs](#tooling-libs)
+- [Tooling/Libs](#toolinglibs)
   - [Assert Match](#assert-match) - Library for custom assertions in Elixir. `Elixir`
   - [Streaming Json Parser](#streaming-json-parser) - Parser for large JSON files in embedded C. `Embedded C`
   - [TrieGen](#triegen) - Efficient parsing tool for embedded C applications. `Embedded C`
@@ -136,7 +136,7 @@ object = %Product{name: "iPhone 12", price: 999.99, description: "The latest iPh
 NPL defines a set of common conventions and system prompts for improving predictabiltiy of model output 
 and behavior with a focus on improving middle ware system reliability/design. 
 
-```md
+``````md
 # Noizu Prompt Lingua: version 0.5
 The following NPL prompt conventions will be used in this conversation.
 
@@ -227,7 +227,7 @@ You are GPT-n, your role is to simulate the services/roles defined below. Respon
 
 Date: 2024-02-12
 ⌟
-```
+``````
 
 ## Notes/Ideas
 
@@ -290,7 +290,7 @@ Java port of my PHP Frag Key library.
 # Scaffolding 
 
 ## Elixir
-### RuleEngine
+### Rule Engine
 [noizu-labs/RuleEngine](https://github.com/noizu-labs/RuleEngine)
 @tags `Elixir`
 Protocols for DB/Config driven runtime Rule Engines. Fantastic candidate for hooking operations
@@ -301,12 +301,12 @@ to GenAI and other models to drive runtime site/monitoring behavior.
 @tags `Elixir`
 Scaffolding for managing Domain Objects and Repos.
 
-[Services](https://github.com/noizu-labs-scaffolding/services)
+#### [Services](https://github.com/noizu-labs-scaffolding/services)
 @tags `Elixir`
 
 Scaffolding for managing large pools of long lived working processes with health monitoring, etc. baked in. 
 
-[Core](https://github.com/noizu-labs-scaffolding/core)
+#### [Core](https://github.com/noizu-labs-scaffolding/core)
 @tags `Elixir`
 
 Base records,protocols that drive other libs.
@@ -683,4 +683,3 @@ Templates.delete(new_template)
 
 
 As my IOT client's backend handles billions of tz operations per minute it became necessary to optimize the common tzdata library moving lookups into FastGlobal and now persistent_terms from ets. 
-
